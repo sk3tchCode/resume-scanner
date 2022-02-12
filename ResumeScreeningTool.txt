@@ -5,7 +5,7 @@
  * @author Ahsan Abdullah
  * @version 1
  */
-public class Unit1Assignment extends ConsoleProgram
+public class ResumeScreeningTool extends ConsoleProgram
 {
     
     public void run()

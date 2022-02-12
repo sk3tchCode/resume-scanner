@@ -1,0 +1,253 @@
+/** This program asks the user for various resume input then grades
+ * the resume out of a specific score. If the score is high enough,
+ * it alerts the user that the resume is reccomended for manual
+ * review.
+ * @author Ahsan Abdullah
+ * @version 1
+ */
+public class Unit1Assignment extends ConsoleProgram
+{
+    
+    public void run()
+    {
+        // code onwards is just variables
+        // ------------------------------
+        int resumeTotalScore = 18;
+        int resumePassingScore = 9;
+        int resumeScore = 0;
+        boolean resumePassed;
+        
+        String[] basicInformation = {"What is your full name?",
+                                     "Are you over 18 years of age?","What is your city?",
+                                     "What is your province?","What is your postal code?"};
+        String[] basicInformationInput = new String[basicInformation.length];
+        
+        String educationInformation = "Have you completed post-secondary education?";
+        String educationInformationInput = "";
+        String postSecondaryInformation = "What post-secondary institution did you attend?";
+        String postSecondaryInformationInput = "";
+        
+        String[] skillsInformation = {"First skill:","Second skill:",
+                                      "Third skill:","Fourth skill:","Fifth skill:"};
+        String[] skillsInformationInput = new String[skillsInformation.length];
+        
+        String previousJobsInformation = "How many previous positions do you wish to list? (up to 3)";
+        int previousJobsInformationInput = 0;
+        String[] previousJobsTitleInput = new String[3];
+        String[] previousJobsEmployerInput = new String[3];
+        int[] previousJobsTimeInput = new int[3];
+        boolean previousJobPassed = false;
+        int totalJobsTime = 0;
+        
+        
+        
+        
+        // code onwards gets the all the user inputs
+        // -----------------------------------------
+        System.out.println("Welcome to the software developer resume screening tool!");
+        
+        System.out.println(makeTitle("Basic Information"));
+        // reads basic information according to the index of the questions in 
+        // basicInformation and stores input in basicInformationInput
+        for(int i = 0; i < basicInformation.length; i++){
+            basicInformationInput[i] = readLine(basicInformation[i] + " ");
+        }
+        
+        System.out.println(makeTitle("Education"));
+        educationInformationInput = readLine(educationInformation + " ");
+        // if the user inputs yes for completing post secondary
+        if(checkForWord(educationInformationInput, "yes")){
+            postSecondaryInformationInput = readLine(postSecondaryInformation + " ");  
+        }
+        
+        System.out.println(makeTitle("Skills"));
+        // reads skills according to the index of the questions in 
+        // skillsInformation and stores input in skillsInformationInput
+        for(int i = 0; i < skillsInformation.length; i++){
+            skillsInformationInput[i] = readLine(skillsInformation[i] + " ");
+        }
+        
+        System.out.println(makeTitle("Previous Experience"));
+        previousJobsInformationInput = readInt(previousJobsInformation);
+        if(previousJobsInformationInput <= 3 && previousJobsInformationInput >= 1){
+            // runs a for loop to gather previous position information depending on
+            // the number of positions the user inputted
+            for(int i = 0; i < previousJobsInformationInput; i++){
+                System.out.println(makeTitle("Previous Position #" + (i + 1)));
+                previousJobsTitleInput[i] = readLine("Job Title: ");
+                previousJobsEmployerInput[i] = readLine("Employer: ");
+                previousJobsTimeInput[i] = readInt("Total years worked: ");
+            }
+        }else{
+            previousJobsInformationInput = 0;
+        }
+        
+        
+        
+        
+        // code onwards scores the user and outputs the resulting score
+        // ------------------------------------------------------------
+        System.out.println("");
+        System.out.println("-----------------------");
+        System.out.println("Resume Screening Report");
+        System.out.println("-----------------------");
+        
+        // score and prints (where necessary) the basic information related input
+        System.out.println(makeTitle("Basic Information"));
+        // below prints name
+        System.out.println(basicInformationInput[0]);
+        // prints city, province
+        System.out.println(basicInformationInput[2] + ", " + basicInformationInput[3]);
+        // prints postal code
+        System.out.println(basicInformationInput[4]);
+        System.out.println("Location: acceptable"); // (any location is acceptable)
+        if(checkForWord(basicInformationInput[1], "yes")){
+            System.out.println("Age: acceptable");
+        }else{
+            System.out.println("Age: not acceptable");
+            resumePassed = false;
+        }
+        if(checkForWord(basicInformationInput[2], "toronto")){
+            resumeScore += 3;
+        }
+        if(checkForWord(basicInformationInput[3], "ontario")){
+            resumeScore += 1;
+        }
+        if(checkForWord(basicInformationInput[4], "m5v 3u2")){
+            resumeScore += 1;
+        }
+
+        // score and prints (where necessary) the education information related input
+        System.out.println(makeTitle("Education"));
+        if(checkForWord(educationInformationInput, "yes")){
+            System.out.println("Completed post-secondary education: yes");
+            System.out.println("Education: acceptable");
+        }else{
+            System.out.println("Completed post-secondary education: no");
+            System.out.println("Education: not acceptable");
+            resumePassed = false;
+        }
+        if(checkForWord(postSecondaryInformationInput, "university")){
+            resumeScore += 1;
+            if(checkForWord(postSecondaryInformationInput, "waterloo")){
+                resumeScore += 1;
+            }
+        }
+        
+        // scores and prints (where necessary) the skills information related input
+        System.out.println(makeTitle("Skills"));
+        System.out.println("Skills listed:");
+        for(int i = 0; i < skillsInformationInput.length; i++){
+            if(checkForWord(skillsInformationInput[i], "java")){
+                resumeScore += 2;
+            }else if(checkForWord(skillsInformationInput[i], "python")){
+                resumeScore += 2;
+            }else if(checkForWord(skillsInformationInput[i], "c++")){
+                resumeScore += 2;
+            }else if(checkForWord(skillsInformationInput[i], "ruby")){
+                resumeScore += 1;
+            }else if(checkForWord(skillsInformationInput[i], "sdlc") || 
+                     checkForWord(skillsInformationInput[i], "software development life cycle") ||
+                     checkForWord(skillsInformationInput[i], "systems development life cycle")){
+                resumeScore += 1;
+            }
+            System.out.println((i + 1) + ". " + skillsInformationInput[i]);
+        }
+        
+        // scores and prints (where necessary) the previous experience information related input
+        // score to do with job titles (below)
+        System.out.println(makeTitle("Previous Experience"));
+        System.out.println("Previous job titles:");
+        for(int i = 0; i < previousJobsInformationInput; i++){
+            if(checkForWord(previousJobsTitleInput[i], "software developer") ||
+               checkForWord(previousJobsTitleInput[i], "data analyst") ||
+               checkForWord(previousJobsTitleInput[i], "web developer")){
+                previousJobPassed = true;
+            }
+            // prints job titles in a row
+            System.out.println((i + 1) + ". " + previousJobsTitleInput[i]);
+        }
+        if(previousJobPassed){
+            System.out.println("Previous job title(s): acceptable");
+            System.out.println("");
+        }else{
+            System.out.println("Previous job title(s): not acceptable");
+            System.out.println("");
+            resumePassed = false;
+        }
+        
+        // score and prints (where necessary) calculation to do with job employers
+        for(int i = 0; i < previousJobsInformationInput; i++){
+            if(checkForWord(previousJobsEmployerInput[i], "microsoft") ||
+               checkForWord(previousJobsEmployerInput[i], "google") ||
+               checkForWord(previousJobsEmployerInput[i], "riot games") ||
+               checkForWord(previousJobsEmployerInput[i], "nintendo") ||
+               checkForWord(previousJobsEmployerInput[i], "randstad") ||
+               checkForWord(previousJobsEmployerInput[i], "apple") ||
+               checkForWord(previousJobsEmployerInput[i], "dell") ||
+               checkForWord(previousJobsEmployerInput[i], "samsung")){
+                resumeScore += 1;
+            }
+        }
+        // score calculation to do with job work time
+        for(int i = 0; i < previousJobsInformationInput; i++){
+            totalJobsTime += previousJobsTimeInput[i];
+        }
+        System.out.println("Total job experience: " + totalJobsTime + " years");
+        if(totalJobsTime > 1){
+            System.out.println("Previous job experience: acceptable");
+        }else{
+            System.out.println("Previous job experience: not acceptable");
+        }
+        if(totalJobsTime > 3){
+            resumeScore += 2;
+        }
+        
+        //resulting score calculation and output whether or not reccomended for manual review
+        System.out.println("");
+        System.out.println("Resume score: " + resumeScore + "/" + resumeTotalScore);
+        if(resumeScore < resumePassingScore){
+            resumePassed = false;
+        }else{
+            resumePassed = true;
+        }
+        if(resumePassed){
+            System.out.println("This resume is reccomended for manual review.");
+        }else{
+            System.out.println("This resume is not reccomended for manual review.");
+        }
+    }
+    
+    /**
+     * returns a title format string given a string
+     * 
+     * @param line   the string to be turned into title format
+     * @return a string with an underline (title format)
+     */
+    public String makeTitle(String line){
+        String underline = "";
+        for(int i = 0; i < line.length(); i++){
+            underline += "-";
+        }
+        String title = "\n" + line + "\n" + underline;
+        return title;
+    }
+    
+    /**
+     * checks a string for a specific word, returns true or false accordingly (ignores casing)
+     * 
+     * @param sentence   the string or sentence the word is checked in
+     * @param wordToCheck   the word that is being checked for
+     * @return a boolean value, true if the word is in the line, false if not
+     */
+    public boolean checkForWord(String sentence, String wordToCheck){
+        String line = sentence.toLowerCase();
+        String word = wordToCheck.toLowerCase();
+        String replacedLine = line.replace(word, "");
+        if(replacedLine.length() < line.length()){
+            return true;
+        }
+        return false;
+    }
+
+}
